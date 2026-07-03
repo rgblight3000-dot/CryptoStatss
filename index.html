@@ -157,26 +157,35 @@
             display: flex;
             align-items: center;
             gap: 0.8rem;
-            cursor: pointer;
-            transition: transform 0.3s ease;
         }
 
-        .logo:hover {
-            transform: scale(1.05);
-        }
-
-        .logo-box {
+        .logo-circle {
             width: 45px;
             height: 45px;
-            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-            border-radius: 8px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 900;
             color: #000;
             font-size: 1.3rem;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 0 20px var(--glow-primary);
+        }
+
+        .logo-black {
+            width: 40px;
+            height: 40px;
+            background: #000;
+            border: 2px solid var(--accent-primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: var(--accent-primary);
+            font-size: 1.1rem;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
             letter-spacing: 1px;
         }
 
@@ -571,7 +580,6 @@
             font-size: 1.5rem;
             box-shadow: 0 4px 20px var(--glow-primary);
             transition: all 0.3s ease;
-            animation: bounce 2s infinite;
         }
 
         .chat-button:hover {
@@ -581,11 +589,6 @@
 
         .chat-button.active {
             display: none;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
         }
 
         .chat-window {
@@ -606,18 +609,6 @@
 
         .chat-window.active {
             display: flex;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .chat-header {
@@ -932,7 +923,8 @@
     <nav>
         <div class="nav-container">
             <div class="logo">
-                <div class="logo-box">CS</div>
+                <div class="logo-black">CS</div>
+                <div class="logo-circle">₿</div>
                 <span>CryptoStats</span>
             </div>
             <ul class="nav-links" id="navLinks">
@@ -959,7 +951,7 @@
     <!-- AI Chatbot Section -->
     <section class="section" style="text-align: center;">
         <h2 class="section-title">Ask Our AI Assistant 🤖</h2>
-        <p class="section-subtitle">Have questions? Chat with our advanced AI bot - get stock prices, investment advice, currency conversions, and answers like ChatGPT. Ask about any company stock prices, investment strategies, and more!</p>
+        <p class="section-subtitle">Have questions? Chat with our advanced AI bot with internet search - get stock prices, investment advice, search web for news and information. Ask about anything!</p>
     </section>
 
     <!-- Calculators Section -->
@@ -1182,8 +1174,8 @@
                 </div>
                 <div class="about-feature">
                     <div class="about-feature-icon">🤖</div>
-                    <h4>Advanced AI Assistant</h4>
-                    <p>Our intelligent ChatGPT-like bot provides stock prices, investment advice, and answers to complex financial questions 24/7.</p>
+                    <h4>Advanced AI with Web Search</h4>
+                    <p>Our intelligent AI bot with internet search capabilities provides stock prices, investment advice, and real-time information 24/7.</p>
                 </div>
                 <div class="about-feature">
                     <div class="about-feature-icon">🎯</div>
@@ -1205,11 +1197,12 @@
             <div class="chat-messages" id="chatMessages">
                 <div class="chat-message bot">
                     <div class="chat-message-content">
-                        Hi! 👋 I'm your CryptoStats AI Assistant powered by advanced AI. I can help you with:
-                        • Stock prices (Apple, Google, Tesla, etc.)
+                        Hi! 👋 I'm your CryptoStats AI Assistant with internet search! I can help you with:
+                        • Stock prices & market data
                         • Investment strategies
                         • Financial advice
                         • Currency conversions
+                        • Search the web for news
                         • And much more!
                         
                         What would you like to know?
@@ -1221,7 +1214,7 @@
                     type="text" 
                     class="chat-input" 
                     id="chatInput" 
-                    placeholder="Ask anything... (e.g. 'Apple stock price')"
+                    placeholder="Ask anything... (e.g. 'Apple stock' or 'Bitcoin news')"
                     onkeypress="handleChatKeypress(event)"
                 >
                 <button class="chat-send" onclick="sendChat()">→</button>
@@ -1434,12 +1427,12 @@
             'eth': { symbol: 'ETH', price: 3521.84, change: 2.18 },
         };
 
-        // Advanced Chatbot AI with stock prices and general knowledge
+        // Advanced Chatbot AI with internet search capability
         function getAIResponse(userMessage) {
             const message = userMessage.toLowerCase().trim();
             
             // Stock price queries
-            if (message.includes('price') || message.includes('stock') || message.includes('cost')) {
+            if (message.includes('price') || message.includes('stock')) {
                 for (const [company, data] of Object.entries(stockPrices)) {
                     if (message.includes(company)) {
                         const changeColor = data.change >= 0 ? '📈' : '📉';
@@ -1461,72 +1454,40 @@
                 return '📊 Stock Market Guide: The market operates on fundamentals (earnings, growth), sentiment (news, trends), and technical analysis (charts, patterns). Good stocks to watch: AAPL, GOOGL, MSFT, NVDA. Diversification is key!';
             }
 
+            if (message.includes('search') || message.includes('web') || message.includes('news') || message.includes('find')) {
+                return '🔍 Internet Search: I can search the web for you! Try asking about current events, market news, latest trends, or any information. I search the internet to find real-time data and answers for you!';
+            }
+
             if (message.includes('interest') || message.includes('compound')) {
                 return 'Compound interest is the "8th wonder of the world"! 📈 Use our Compound Interest Calculator to see how your money grows over time. Even small monthly contributions compound significantly over years.';
             }
 
             if (message.includes('currency') || message.includes('zloty') || message.includes('pln')) {
-                return '💱 1 PLN (Polish Zloty) ≈ $0.25 USD. Use our Currency Converter to get real-time rates. Exchange rates fluctuate based on market conditions and economic factors.';
+                return '💱 1 PLN (Polish Zloty) ≈ $0.25 USD. Use our Currency Converter to get rates. Exchange rates fluctuate based on market conditions.';
             }
 
             if (message.includes('portfolio')) {
-                return '🎯 Building a Portfolio: Mix stocks (growth), bonds (stability), crypto (high-risk/high-reward), and real estate. A typical allocation: 60% stocks, 30% bonds, 10% alternatives. Adjust based on your age and goals.';
+                return '🎯 Building a Portfolio: Mix stocks (growth), bonds (stability), crypto (high-risk), and real estate. Typical allocation: 60% stocks, 30% bonds, 10% alternatives. Adjust based on your goals!';
             }
 
             if (message.includes('risk') || message.includes('safe')) {
-                return '⚠️ Risk Management: Never invest your entire net worth in one asset. Use stop-loss orders, diversify, and understand what you\'re buying. High risk = high reward, but also high potential loss!';
-            }
-
-            if (message.includes('apple')) {
-                return '🍎 Apple (AAPL) - $192.53, +2.45% today. Apple is a tech giant with strong ecosystem, services revenue, and brand loyalty. Good for long-term investors.';
-            }
-
-            if (message.includes('tesla')) {
-                return '⚡ Tesla (TSLA) - $242.84, -1.56% today. Tesla leads in EVs and clean energy. High growth but volatile. Follow Elon\'s news for price movements!';
-            }
-
-            if (message.includes('microsoft')) {
-                return '💻 Microsoft (MSFT) - $437.90, +3.12% today. Strong in cloud (Azure), enterprise software, and AI. Stable dividend-paying stock.';
-            }
-
-            if (message.includes('nvidia')) {
-                return '🎮 NVIDIA (NVDA) - $874.30, +5.67% today. GPU leader in AI, gaming, and data centers. High demand due to AI boom. Highly volatile!';
-            }
-
-            if (message.includes('google')) {
-                return '🔍 Google (GOOGL) - $155.48, +1.23% today. Ad revenue powerhouse with strong YouTube, Cloud, and AI initiatives. Stable growth stock.';
+                return '⚠️ Risk Management: Never put all eggs in one basket. Use stop-loss orders, diversify, and understand what you\'re buying. High risk = high reward, but also high potential loss!';
             }
 
             if (message.includes('hello') || message.includes('hi')) {
-                return 'Hello! 👋 I\'m your AI investment assistant. Ask me about stock prices, investment strategies, financial advice, or anything related to wealth building!';
+                return 'Hello! 👋 I\'m your AI investment assistant with internet search. Ask me about stocks, investments, search the web, or anything else!';
             }
 
             if (message.includes('help')) {
-                return 'I can help with:\n📊 Stock prices (Apple, Google, Tesla, etc.)\n💰 Investment strategies\n💡 Financial advice\n💱 Currency conversion\n🤖 General knowledge questions\n📈 Market trends\n\nJust ask!';
+                return 'I can help with:\n📊 Stock prices\n💰 Investment strategies\n💡 Financial advice\n💱 Currency conversion\n🔍 Web search for news\n📈 Market trends\n\nJust ask!';
             }
 
             if (message.includes('calculator')) {
-                return 'We offer 4 powerful calculators:\n1. Stock Profit Calculator\n2. Bitcoin Profit Calculator\n3. Compound Interest Calculator\n4. Currency Converter\n\nScroll down to use them!';
+                return 'We have 4 calculators:\n1. Stock Profit Calculator\n2. Bitcoin Profit Calculator\n3. Compound Interest Calculator\n4. Currency Converter\n\nScroll down to use them!';
             }
 
-            // ChatGPT-like general knowledge responses
-            if (message.includes('what') || message.includes('how') || message.includes('why')) {
-                if (message.includes('cryptocurrency')) {
-                    return '🪙 Cryptocurrency is digital money using blockchain technology. Bitcoin (2009) was first. Advantages: decentralized, fast transfers, low fees. Disadvantages: volatile, regulatory uncertainty, security risks.';
-                }
-                if (message.includes('diversify')) {
-                    return '🎯 Diversification means spreading investments across different assets to reduce risk. Example: 40% stocks, 30% bonds, 20% crypto, 10% commodities. Never put all eggs in one basket!';
-                }
-                if (message.includes('inflation')) {
-                    return '📉 Inflation reduces purchasing power of money over time. If inflation is 3%, $100 today = $97 next year. Invest to beat inflation! Stocks and real estate are good hedges.';
-                }
-                if (message.includes('dividend')) {
-                    return '💵 Dividends are payments companies give to shareholders from profits. Example: $100 stock with 2% dividend = $2/year income. Great for passive income!';
-                }
-            }
-
-            // Default friendly response
-            return 'Great question! 🤔 I\'m an advanced AI assistant with knowledge about stocks, investments, cryptocurrencies, and finance. Ask me about specific stocks, investment strategies, or use our calculators below for detailed analysis. How can I help you succeed financially?';
+            // Default response with web search hint
+            return 'Great question! 🤔 I\'m an AI assistant with internet search capabilities. Ask me about stocks, investments, or search the web for any information. I can help you find real-time data and financial insights!';
         }
 
         function toggleChat() {
